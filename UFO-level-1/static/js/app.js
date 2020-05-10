@@ -2,23 +2,33 @@
 var tableData = data;
 var tbody = d3.select("tbody");
 
-// Test to view data
-// console.log(data);
+var button = d3.select("#filter-btn");
+var form = d3.select("form");
+var resetButton = d3.select("#filter-btn2");
 
-// Populate Table with ufo data
-tableData.forEach((ufodata) => {
-    var row = tbody.append("tr");
-    Object.entries(ufodata).forEach(([key, value]) => {
-      var cell = row.append("td");
-      cell.text(value);
-    });
-  });
+fillTable(tableData);
+button.on("click", runQuery);
+form.on("submit", runQuery);
+resetButton.on("click", fillTable(tableData));
+  
+function clearTable()
+{
+  d3.selectAll("tr").remove()
+};
 
-  var button = d3.select("#filter-btn");
-  var form = d3.select("form");
-
-  button.on("click", runQuery);
-  form.on("submit", runQuery);
+function fillTable(myData)
+    { 
+      clearTable();
+      myData.forEach((data) =>
+        {
+          var row = tbody.append("tr");
+          Object.entries(data).forEach(([key, value]) =>
+           {
+            var cell = row.append("td");
+            cell.text(value);
+           });
+        });
+    };
 
   function runQuery()
   {
@@ -26,22 +36,29 @@ tableData.forEach((ufodata) => {
     d3.event.preventDefault();
 
     // Select the input element and get the raw HTML node
-    var inputElement = d3.select(".form-control");
-
+    //var inputElement = d3.select(".form-control");
+    var dateElement = d3.select("#datetime");
     // Get the value property of the input element
-    var inputValue = inputElement.property("value");
+    var inputdateValue = dateElement.property("value");
 
-    console.log(inputValue);
+    var cityElement = d3.select("#city");
+    var inputcityValue = cityElement.property("value");
 
-    var filteredData = tableData.filter(data => data.datetime === inputValue);
+    console.log("date", inputdateValue);
+    console.log("city", inputcityValue);
 
+    var filteredData = tableData.filter(data => 
+                                        data.datetime === inputdateValue &&
+                                        data.city === inputcityValue);
+
+    //Clear existing table on page
+    clearTable();
+
+    //Fill Table with filtered data
+    fillTable(filteredData);
+
+    //print filtered table in log
     console.log(filteredData);
 
   };
 
-  function clearTable()
-  {
-    //insert code to clear table data
-
-
-  }
