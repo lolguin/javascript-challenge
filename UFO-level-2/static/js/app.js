@@ -4,10 +4,12 @@ var tbody = d3.select("tbody");
 
 var button = d3.select("#filter-btn");
 var form = d3.select("form");
+//var resetButton = d3.select("#filter-btn");
 
 fillTable(tableData);
 button.on("click", runQuery);
 form.on("submit", runQuery);
+//resetButton.on("click", console.log("Reset was clicked"));
   
 function clearTable()
 {
@@ -41,10 +43,27 @@ function fillTable(myData)
     // Get the value property of the input element
     var inputdateValue = dateElement.property("value");
 
+    var cityElement = d3.select("#city");
+    var inputcityValue = cityElement.property("value");
+
     console.log("date", inputdateValue);
+    console.log("city", inputcityValue);
+
+    if(inputdateValue.length == 0)
+    {
+      console.log('date is null');
+      var filteredData = tableData.filter(data => 
+        data.city === inputcityValue);  
+
+    }
     
-    var filteredData = tableData.filter(data => data.datetime === inputdateValue);
-    
+    else if(inputcityValue.length == 0)
+    {
+      console.log('city is null');
+      var filteredData = tableData.filter(data => 
+        data.datetime === inputdateValue);
+    }    
+
     //Clear existing table on page
     clearTable();
 
